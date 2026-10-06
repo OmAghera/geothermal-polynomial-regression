@@ -50,7 +50,7 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
     
     # We will search over these regularization strengths
     alphas = [0.001, 0.01, 0.1, 1.0, 10.0]
-    l1_ratios = [0.1,0.2, 0.5, 0.8]
+    l1_ratios = [0.2, 0.5, 0.8]
     
     for degree in range(1, max_degree + 1):
         print(f"Evaluating Polynomial Degree {degree}...")
