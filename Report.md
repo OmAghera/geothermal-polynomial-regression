@@ -27,6 +27,7 @@ The cross-validation pipeline searched polynomial degrees from 1 to 10.
 *   **Optimal Polynomial Degree:** 5
 *   **Optimal Regularization ($\alpha$):** 0.01
 *   **Cross-Validation MSE:** 0.317081
+*   **Cross-Validation $R^2$:** 0.968942
 
 **Rationale:**
 The grid search revealed that a degree 5 polynomial using Lasso regularization achieved the best generalization. Lasso ($\mathcal{L}_1$ regularization) was particularly effective here because, at degree 5 with 6 features, the number of polynomial terms becomes very large (462 terms). Lasso inherently performs feature selection by shrinking the coefficients of less important interaction terms to exactly zero, preventing the model from capturing noise.
@@ -43,6 +44,7 @@ The cross-validation pipeline searched polynomial degrees from 1 to 20.
 *   **Optimal Polynomial Degree:** 11
 *   **Optimal Regularization ($\alpha$):** 1.0
 *   **Cross-Validation MSE:** 0.237935
+*   **Cross-Validation $R^2$:** 0.994317
 
 **Rationale:**
 The 3D spatial data required a highly complex mapping, as evidenced by the selection of a degree 11 polynomial. Unlike Phase 1, the search preferred Ridge ($\mathcal{L}_2$ regularization) with a moderate penalty ($\alpha = 1.0$). This suggests that the thermal anomaly is distributed smoothly across the coordinate space, and many small, non-zero interaction terms contribute to the final score rather than a sparse set of dominant features.

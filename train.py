@@ -50,7 +50,7 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
     
     # We will search over these regularization strengths
     alphas = [0.001, 0.01, 0.1, 1.0, 10.0]
-    l1_ratios = [0.2, 0.5, 0.8]
+    l1_ratios = [0.1,0.2, 0.5, 0.8]
     
     for degree in range(1, max_degree + 1):
         print(f"Evaluating Polynomial Degree {degree}...")
@@ -67,13 +67,16 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
                 pipeline, 
                 param_grid, 
                 cv=cv, 
-                scoring='neg_mean_squared_error', 
+                scoring={'mse': 'neg_mean_squared_error', 'r2': 'r2'}, 
+                refit='mse',
                 n_jobs=-1 # Use all available CPU cores for speed
             )
             search.fit(X_train, y_train)
             
-            # Scoring is negative MSE, so we negate it back
-            cv_mse = -search.best_score_
+            # Get the best index based on MSE
+            best_idx = search.best_index_
+            cv_mse = -search.cv_results_['mean_test_mse'][best_idx]
+            cv_r2 = search.cv_results_['mean_test_r2'][best_idx]
             
             if cv_mse < best_score:
                 best_score = cv_mse
@@ -81,7 +84,8 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
                     'degree': degree,
                     'model': model_type,
                     'params': search.best_params_,
-                    'cv_mse': cv_mse
+                    'cv_mse': cv_mse,
+                    'cv_r2': cv_r2
                 }
                 best_model = search.best_estimator_
 
@@ -90,6 +94,7 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
     print(f"  - Degree     : {best_params['degree']}")
     print(f"  - Parameters : {best_params['params']}")
     print(f"  - CV MSE     : {best_params['cv_mse']:.6f}")
+    print(f"  - CV R2      : {best_params['cv_r2']:.6f}")
     
     # Generate predictions on the unseen test set
     predictions = best_model.predict(X_test)
