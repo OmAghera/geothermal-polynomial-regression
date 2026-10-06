@@ -78,6 +78,8 @@ def train_and_evaluate(var_id, train_file, test_file, max_degree):
             cv_mse = -search.cv_results_['mean_test_mse'][best_idx]
             cv_r2 = search.cv_results_['mean_test_r2'][best_idx]
             
+            print(f"  -> {model_type.capitalize():10} | MSE: {cv_mse:.6f} | R2: {cv_r2:.6f} | Best params: {search.best_params_}")
+            
             if cv_mse < best_score:
                 best_score = cv_mse
                 best_params = {
